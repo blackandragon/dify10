@@ -71,10 +71,10 @@ def create_flask_app_with_configs() -> Flask:
 def create_app() -> Flask:
     app = create_flask_app_with_configs()
 
-    app.secret_key = app.config["SECRET_KEY"]
+    app.secret_key = dify_config.SECRET_KEY
 
     log_handlers = None
-    log_file = app.config.get("LOG_FILE")
+    log_file = dify_config.LOG_FILE
     if log_file:
         log_dir = os.path.dirname(log_file)
         os.makedirs(log_dir, exist_ok=True)
@@ -88,13 +88,13 @@ def create_app() -> Flask:
         ]
 
     logging.basicConfig(
-        level=app.config.get("LOG_LEVEL"),
-        format=app.config.get("LOG_FORMAT"),
-        datefmt=app.config.get("LOG_DATEFORMAT"),
+        level=dify_config.LOG_LEVEL,
+        format=dify_config.LOG_FORMAT,
+        datefmt=dify_config.LOG_DATEFORMAT,
         handlers=log_handlers,
         force=True,
     )
-    log_tz = app.config.get("LOG_TZ")
+    log_tz = dify_config.LOG_TZ
     if log_tz:
         from datetime import datetime
 
@@ -187,7 +187,7 @@ def register_blueprints(app):
 
     CORS(
         web_bp,
-        resources={r"/*": {"origins": app.config["WEB_API_CORS_ALLOW_ORIGINS"]}},
+        resources={r"/*": {"origins": dify_config.WEB_API_CORS_ALLOW_ORIGINS}},
         supports_credentials=True,
         allow_headers=["Content-Type", "Authorization", "X-App-Code"],
         methods=["GET", "PUT", "POST", "DELETE", "OPTIONS", "PATCH"],
@@ -198,7 +198,7 @@ def register_blueprints(app):
 
     CORS(
         console_app_bp,
-        resources={r"/*": {"origins": app.config["CONSOLE_CORS_ALLOW_ORIGINS"]}},
+        resources={r"/*": {"origins": dify_config.CONSOLE_CORS_ALLOW_ORIGINS}},
         supports_credentials=True,
         allow_headers=["Content-Type", "Authorization"],
         methods=["GET", "PUT", "POST", "DELETE", "OPTIONS", "PATCH"],
