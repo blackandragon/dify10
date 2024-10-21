@@ -1,5 +1,7 @@
 import os
 
+from configs import dify_config
+
 if os.environ.get("DEBUG", "false").lower() != "true":
     from gevent import monkey
 
@@ -46,7 +48,7 @@ config_type = os.getenv("EDITION", default="SELF_HOSTED")  # ce edition first
 app = create_app()
 celery = app.extensions["celery"]
 
-if app.config.get("TESTING"):
+if dify_config.TESTING:
     print("App is running in TESTING mode")
 
 
